@@ -1,14 +1,18 @@
 <div align="center">
-  <img src="assets/BOT%20CAR.jpg" alt="BOT CAR Hero Image" width="100%" style="border-radius: 10px;">
+  <img src="website/assets/BOT%20CAR.jpg" alt="BOT CAR Hero Image" width="100%" style="border-radius: 10px;">
   <br/>
   <h1>🚀 BOT CAR</h1>
   <p>
     <strong>Robot mobile autonome et manipulateur basé sur ESP32</strong>
   </p>
   <p>
+    <a href="https://botcar.vercel.app/"><strong>🌐 Visiter le site web officiel du projet</strong></a>
+  </p>
+  <p>
     <a href="https://github.com/Max-Adis/BOT-CAR/"><img src="https://img.shields.io/badge/Language-MicroPython-0078D4.svg?style=flat-square" alt="Language"></a>
     <a href="https://github.com/Max-Adis/BOT-CAR/"><img src="https://img.shields.io/badge/Platform-ESP32-E83524.svg?style=flat-square" alt="Platform"></a>
     <a href="https://github.com/Max-Adis/BOT-CAR/"><img src="https://img.shields.io/badge/Status-Active-success.svg?style=flat-square" alt="Status"></a>
+    <a href="https://botcar.vercel.app/"><img src="https://img.shields.io/badge/Website-Online-brightgreen.svg?style=flat-square" alt="Website"></a>
   </p>
 </div>
 
@@ -49,7 +53,7 @@ Le système s'articule autour des composants matériels suivants :
 L'interface de contrôle a été conçue pour être aussi ergonomique qu'une manette de jeu classique. Elle intègre un joystick de déplacement virtuel et des boutons d'actions contextuels.
 
 <div align="center">
-  <img src="assets/Interface%20wev.png" alt="Interface de contrôle Web" width="80%" style="border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <img src="website/assets/Interface%20wev.png" alt="Interface de contrôle Web" width="80%" style="border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
 </div>
 
 ---
@@ -74,12 +78,12 @@ Suivez ces étapes pour prendre le contrôle du robot :
 
 ```text
 📦 BOT-CAR
- ┣ 📂 assets/          # Images et médias du projet
  ┣ 📂 docs/            # Documentation technique (PDF) et tutoriels mécaniques
  ┣ 📂 esp32_code/      # Code embarqué
  ┃ ┣ 📜 main.py        # Script principal MicroPython
  ┃ ┗ 📜 index.html     # Interface web embarquée sur l'ESP32
  ┗ 📂 website/         # Site web vitrine du projet
+   ┣ 📂 assets/        # Images et médias du projet
    ┣ 📜 index.html
    ┣ 📜 robots.txt
    ┗ 📜 sitemap.xml

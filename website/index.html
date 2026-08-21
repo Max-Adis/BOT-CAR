@@ -185,6 +185,35 @@
         }
         .github-btn:hover { background: #f1f5f9; }
         
+        /* Navbar */
+        .navbar {
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-logo {
+            font-weight: 700; font-size: 1.5rem; color: var(--primary); text-decoration: none;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a {
+            color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-github {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--text-dark); color: #fff !important; padding: 0.5rem 1rem; border-radius: 6px;
+        }
+        .nav-github:hover { background: var(--primary); }
+        
         @media (max-width: 768px) {
             .hero-wrap { flex-direction: column; text-align: center; }
             h1 { font-size: 2.25rem; }
@@ -194,6 +223,26 @@
     </style>
 </head>
 <body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                BOT-CAR
+            </a>
+            <div class="nav-links">
+                <a href="#presentation">Présentation</a>
+                <a href="#materiel">Matériel</a>
+                <a href="#interface">Interface</a>
+                <a href="https://github.com/Max-Adis/BOT-CAR/" target="_blank" class="nav-github">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57C20.565 21.795 24 17.31 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <header>
         <div class="container hero-wrap">
@@ -209,13 +258,13 @@
             </div>
             <div class="hero-image">
                 <!-- Photo principale du BOT CAR -->
-                <img src="../assets/BOT%20CAR.jpg" alt="Photo du robot BOT CAR">
+                <img src="assets/BOT%20CAR.jpg" alt="Photo du robot BOT CAR">
             </div>
         </div>
     </header>
 
     <!-- PROBLÉMATIQUE ET OBJECTIFS -->
-    <section>
+    <section id="presentation">
         <div class="container grid-2">
             <div>
                 <h2>Présentation & Problématique</h2>
@@ -235,7 +284,7 @@
     </section>
 
     <!-- MATÉRIEL ET ARCHITECTURE -->
-    <section class="bg-white">
+    <section id="materiel" class="bg-white">
         <div class="container">
             <h2 style="text-align: center;">Architecture et Matériel</h2>
             <p style="text-align: center; max-width: 700px; margin: 0 auto 4rem auto;">Le système repose sur un ESP32 jouant le rôle de contrôleur principal, générant un point d’accès Wi-Fi pour la connexion directe de l'utilisateur.</p>
@@ -278,11 +327,11 @@
     </section>
 
     <!-- INTERFACE WEB -->
-    <section>
+    <section id="interface">
         <div class="container grid-2">
             <div style="order: 2;">
                 <!-- Image de l'interface ajoutée par l'utilisateur -->
-                <img src="../assets/Interface%20wev.png" alt="Interface web de contrôle" class="interface-img">
+                <img src="assets/Interface%20wev.png" alt="Interface web de contrôle" class="interface-img">
             </div>
             <div style="order: 1;">
                 <h2>Interface de Contrôle & Fonctionnement Global</h2>

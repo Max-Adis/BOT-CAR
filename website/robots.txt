@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://max-adis.github.io/BOT-CAR/sitemap.xml
+Sitemap: https://botcar.vercel.app/sitemap.xml
