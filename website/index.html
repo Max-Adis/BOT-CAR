@@ -281,9 +281,31 @@
         }
         .nav-github:hover { background: var(--primary); }
         
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
         @media (max-width: 768px) {
-            .nav-container { flex-direction: column; gap: 1rem; padding: 0 1rem; }
-            .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; font-size: 0.9rem; }
+            .nav-container { flex-wrap: wrap; padding: 0 1.5rem; }
+            .hamburger { display: block; }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                padding: 1rem 0;
+                gap: 1rem;
+                margin-top: 1rem;
+                border-top: 1px solid var(--border);
+            }
+            .nav-links.show { display: flex; }
+            .nav-links a { font-size: 1.1rem; width: 100%; text-align: center; }
+            .nav-github { width: 100%; justify-content: center; }
+            
             header { padding: 3rem 0; }
             .hero-wrap { flex-direction: column; text-align: center; gap: 2.5rem; }
             h1 { font-size: 2.25rem; }
@@ -293,10 +315,6 @@
             .container { padding: 0 1.5rem; }
             section { padding: 3.5rem 0; }
             .hero-text::before { width: 100%; left: 0; } /* Ajuste l'effet sur mobile */
-        }
-        @media (max-width: 480px) {
-            .nav-links { flex-direction: column; gap: 0.5rem; }
-            .nav-github { margin-top: 0.5rem; }
         }
     </style>
 </head>
@@ -308,6 +326,15 @@
                 <img src="assets/Logo%20BotCar.png" alt="Logo BOT CAR" width="40" height="40" style="border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); padding: 2px;">
                 BOT-CAR
             </a>
+            
+            <button class="hamburger" aria-label="Menu de navigation">
+                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            
             <div class="nav-links">
                 <a href="#presentation">Présentation</a>
                 <a href="#materiel">Matériel</a>
@@ -477,6 +504,21 @@
     </footer>
 
     <script>
+        // Menu Hamburger
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+        });
+        
+        // Fermer le menu si on clique sur un lien
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('show');
+            });
+        });
+
         // Détection du scroll pour déclencher les animations CSS
         document.addEventListener('DOMContentLoaded', function() {
             const reveals = document.querySelectorAll('.reveal');
