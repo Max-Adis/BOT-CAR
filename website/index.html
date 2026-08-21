@@ -282,10 +282,21 @@
         .nav-github:hover { background: var(--primary); }
         
         @media (max-width: 768px) {
-            .hero-wrap { flex-direction: column; text-align: center; }
+            .nav-container { flex-direction: column; gap: 1rem; padding: 0 1rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; font-size: 0.9rem; }
+            header { padding: 3rem 0; }
+            .hero-wrap { flex-direction: column; text-align: center; gap: 2.5rem; }
             h1 { font-size: 2.25rem; }
+            h2 { font-size: 1.5rem; }
             h2::after { left: 50%; transform: translateX(-50%); }
-            .hero-image { text-align: center; }
+            .hero-image { text-align: center; width: 100%; }
+            .container { padding: 0 1.5rem; }
+            section { padding: 3.5rem 0; }
+            .hero-text::before { width: 100%; left: 0; } /* Ajuste l'effet sur mobile */
+        }
+        @media (max-width: 480px) {
+            .nav-links { flex-direction: column; gap: 0.5rem; }
+            .nav-github { margin-top: 0.5rem; }
         }
     </style>
 </head>
