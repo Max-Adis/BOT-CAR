@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="BOT%20CAR.jpg" alt="BOT CAR Hero Image" width="100%" style="border-radius: 10px;">
+  <img src="assets/BOT%20CAR.jpg" alt="BOT CAR Hero Image" width="100%" style="border-radius: 10px;">
   <br/>
   <h1>🚀 BOT CAR</h1>
   <p>
@@ -49,7 +49,7 @@ Le système s'articule autour des composants matériels suivants :
 L'interface de contrôle a été conçue pour être aussi ergonomique qu'une manette de jeu classique. Elle intègre un joystick de déplacement virtuel et des boutons d'actions contextuels.
 
 <div align="center">
-  <img src="Interface%20wev.png" alt="Interface de contrôle Web" width="80%" style="border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <img src="assets/Interface%20wev.png" alt="Interface de contrôle Web" width="80%" style="border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
 </div>
 
 ---
@@ -74,13 +74,15 @@ Suivez ces étapes pour prendre le contrôle du robot :
 
 ```text
 📦 BOT-CAR
- ┣ 📂 ZYC0208/         # Ressources de montage mécanique et tutoriels
- ┣ 📂 index/           # Code source du site vitrine de présentation
- ┣ 📜 main.py          # Script principal MicroPython exécuté sur l'ESP32
- ┣ 📜 index.html.html  # Code HTML/CSS/JS de l'interface de contrôle embarquée
- ┣ 📜 DOCUMENTATION TECHNIQUE BOT CAR_104017.pdf  # Manuel technique détaillé
- ┣ 🖼️ BOT CAR.jpg      # Image du robot
- ┗ 🖼️ Interface wev.png# Capture de l'interface de contrôle
+ ┣ 📂 assets/          # Images et médias du projet
+ ┣ 📂 docs/            # Documentation technique (PDF) et tutoriels mécaniques
+ ┣ 📂 esp32_code/      # Code embarqué
+ ┃ ┣ 📜 main.py        # Script principal MicroPython
+ ┃ ┗ 📜 index.html     # Interface web embarquée sur l'ESP32
+ ┗ 📂 website/         # Site web vitrine du projet
+   ┣ 📜 index.html
+   ┣ 📜 robots.txt
+   ┗ 📜 sitemap.xml
 ```
 
 ---
