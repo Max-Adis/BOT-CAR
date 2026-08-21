@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>BOT-CAR • Télécommande</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================
+       PALETTE — Xbox blanc / Neumorphisme clair
+    ========================================================= */
+    :root {
+      --bg:        #d6dbe4;
+      --body:      #dfe3ec;
+      --raised:    #eaeff7;
+      --inset:     #c8cdd6;
+      --border:    rgba(255,255,255,0.75);
+
+      --sd:        rgba(163,177,198,0.65);   /* ombre sombre */
+      --sl:        rgba(255,255,255,0.90);   /* ombre lumière */
+
+      --neu-out:   8px 8px 18px var(--sd), -5px -5px 14px var(--sl);
+      --neu-in:    inset 5px 5px 12px var(--sd), inset -3px -3px 8px var(--sl);
+      --neu-btn:   5px 5px 12px var(--sd), -3px -3px 9px var(--sl);
+      --neu-press: inset 4px 4px 10px var(--sd), inset -2px -2px 6px var(--sl);
+
+      /* Couleurs Xbox officielles */
+      --xg:  #107C10;   /* Vert  (A) */
+      --xb:  #D74000;   /* Rouge (B) */
+      --xx:  #0078D4;   /* Bleu  (X) */
+      --xy:  #C89600;   /* Jaune (Y) */
+
+      --text:     #2a2e3d;
+      --text-mid: #5a6070;
+      --text-dim: #8a9090;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+      touch-action: none;
+      -webkit-user-select: none; user-select: none;
+    }
+    body {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--text);
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16,124,16,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 30% at 50% 110%, rgba(0,120,212,0.06) 0%, transparent 55%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* =========================================================  WRAPPER */
+    .wrap {
+      position: relative; z-index: 1;
+      width: min(840px, 96vw);
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+    }
+
+    /* ========================================================= HEADER */
+    .header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 8px 26px;
+      background: var(--body);
+      border-radius: 40px;
+      border: 1px solid var(--border);
+      box-shadow: var(--neu-out);
+    }
+    .xbox-logo {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--xg);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(16,124,16,0.4);
+      flex-shrink: 0;
+    }
+    .xbox-logo svg { width: 15px; height: 15px; fill: #fff; }
+    .logo-text {
+      font-family: 'Orbitron', monospace; font-weight: 900;
+      font-size: clamp(1rem, 2.8vw, 1.5rem); letter-spacing: 0.2em;
+      color: var(--text);
+    }
+    .logo-text em { color: var(--xg); font-style: normal; }
+    .sep { width: 1px; height: 22px; background: var(--inset); }
+    .status-block { display: flex; align-items: center; gap: 7px; }
+    .led {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #b0b8c4; transition: all .3s;
+    }
+    .led.on {
+      background: var(--xg);
+      box-shadow: 0 0 6px var(--xg), 0 0 14px rgba(16,124,16,.4);
+      animation: led-pulse 2s ease-in-out infinite;
+    }
+    @keyframes led-pulse {
+      0%,100% { box-shadow: 0 0 5px var(--xg); }
+      50%      { box-shadow: 0 0 12px var(--xg), 0 0 22px rgba(16,124,16,.3); }
+    }
+    .status-label {
+      font-size: .68rem; letter-spacing: .12em;
+      color: var(--text-dim); text-transform: uppercase;
+    }
+    .status-label b { color: var(--xg); font-weight: 700; }
+
+    /* ========================================================= BODY MANETTE */
+    .pad-body {
+      width: 100%;
+      background: linear-gradient(160deg, var(--raised) 0%, var(--body) 100%);
+      border: 1px solid var(--border);
+      border-radius: 50px 50px 80px 80px / 28px 28px 55px 55px;
+      padding: clamp(18px,4vw,34px) clamp(12px,3.5vw,36px);
+      box-shadow: var(--neu-out),
+                  inset 0 1px 0 rgba(255,255,255,.9),
+                  inset 0 -1px 0 rgba(163,177,198,.3);
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: clamp(8px,2.5vw,22px);
+      position: relative;
+    }
+    .pad-body::before {
+      content: ''; position: absolute;
+      top: 0; left: 18%; right: 18%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.9),
+                  rgba(16,124,16,.3), rgba(255,255,255,.9), transparent);
+    }
+
+    /* Gachettes */
+    .triggers {
+      position: absolute; top: -12px; left: 0; right: 0;
+      display: flex; justify-content: space-between;
+      padding: 0 clamp(18px,5vw,58px); pointer-events: none;
+    }
+    .trigger {
+      width: clamp(46px,9vw,66px); height: 12px;
+      background: linear-gradient(180deg, var(--raised), var(--body));
+      border-radius: 8px 8px 0 0;
+      box-shadow: 0 -3px 8px var(--sd), inset 0 1px 0 rgba(255,255,255,.8);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .trigger span { font-size: .44rem; letter-spacing: .15em; color: var(--text-dim); text-transform: uppercase; }
+
+    /* ========================================================= ZONES L & R */
+    .zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+    .zone-lbl { font-size: clamp(.5rem,1.1vw,.64rem); letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); font-weight: 700; }
+
+    /* ========================================================= JOYSTICK */
+    .js-wrap { position: relative; width: clamp(110px,18vw,148px); height: clamp(110px,18vw,148px); }
+    .js-base {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: radial-gradient(circle at 38% 34%, var(--raised), var(--inset));
+      box-shadow: var(--neu-in); position: relative;
+    }
+    .js-base::before {
+      content: ''; position: absolute; inset: 0; border-radius: 50%;
+      background:
+        linear-gradient(0deg,  transparent 46%, rgba(16,124,16,.1) 48%, rgba(16,124,16,.1) 52%, transparent 54%),
+        linear-gradient(90deg, transparent 46%, rgba(16,124,16,.1) 48%, rgba(16,124,16,.1) 52%, transparent 54%);
+    }
+    .js-ring { position: absolute; inset: 8px; border-radius: 50%; border: 1px dashed rgba(16,124,16,.2); pointer-events: none; }
+    .js-pad {
+      position: absolute; width: 42%; height: 42%; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 36% 32%, var(--raised), var(--body));
+      box-shadow: 5px 5px 12px var(--sd), -3px -3px 8px var(--sl),
+                  inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 1px rgba(163,177,198,.3);
+      cursor: grab; z-index: 2; will-change: transform; transition: box-shadow .1s;
+    }
+    .js-pad::before {
+      content: ''; position: absolute; top: 12%; left: 18%; width: 36%; height: 28%;
+      border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.7), transparent);
+    }
+    .js-pad.active {
+      cursor: grabbing;
+      box-shadow: 3px 3px 7px var(--sd), -1px -1px 4px var(--sl),
+                  0 0 0 2px rgba(16,124,16,.4), 0 0 12px rgba(16,124,16,.18);
+    }
+    .dir-disp {
+      font-family: 'Orbitron', monospace; font-weight: 700;
+      font-size: clamp(.55rem,1.3vw,.72rem); letter-spacing: .16em;
+      color: var(--xg); min-width: 90px; text-align: center; height: 1.2em;
+    }
+
+    /* ========================================================= BOUTONS LOSANGE */
+    .diamond { position: relative; width: clamp(118px,19vw,158px); height: clamp(118px,19vw,158px); }
+    .d-btn {
+      position: absolute;
+      width: clamp(40px,6.8vw,52px); height: clamp(40px,6.8vw,52px);
+      border-radius: 50%; border: none; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+      outline: none; -webkit-tap-highlight-color: transparent;
+      transition: box-shadow .1s, transform .1s;
+    }
+    .d-btn.up    { top: 0;    left: 50%; transform: translate(-50%,0); }
+    .d-btn.down  { bottom: 0; left: 50%; transform: translate(-50%,0); }
+    .d-btn.left  { left: 0;   top: 50%;  transform: translate(0,-50%); }
+    .d-btn.right { right: 0;  top: 50%;  transform: translate(0,-50%); }
+
+    /* Couleurs Xbox par bouton */
+    .d-btn.up    { background: radial-gradient(circle at 38% 32%, #fff4bb, #c89600); --glow: var(--xy); --lc: #5a3e00; }
+    .d-btn.down  { background: radial-gradient(circle at 38% 32%, #b8f0b8, #0d6b0d); --glow: var(--xg); --lc: #fff; }
+    .d-btn.left  { background: radial-gradient(circle at 38% 32%, #c0deff, #005bb0); --glow: var(--xx); --lc: #fff; }
+    .d-btn.right { background: radial-gradient(circle at 38% 32%, #ffd0c0, #b83000); --glow: var(--xb); --lc: #fff; }
+
+    .d-btn { box-shadow: 5px 5px 12px var(--sd), -3px -3px 9px var(--sl), inset 0 1px 0 rgba(255,255,255,.55); }
+
+    .d-btn:active, .d-btn.pressed {
+      transform: translate(var(--tx,-50%), var(--ty,-50%)) scale(.92) !important;
+      box-shadow: 2px 2px 5px var(--sd), inset 3px 3px 8px rgba(0,0,0,.18),
+                  0 0 14px color-mix(in srgb, var(--glow) 55%, transparent),
+                  0 0 0 2px var(--glow);
+    }
+    .d-btn.up    { --tx:-50%; --ty:0; }
+    .d-btn.down  { --tx:-50%; --ty:0; }
+    .d-btn.left  { --tx:0;    --ty:-50%; }
+    .d-btn.right { --tx:0;    --ty:-50%; }
+
+    .d-btn .icon  { font-size: clamp(.95rem,2.2vw,1.3rem); line-height: 1; }
+    .d-btn .lbl   { font-family:'Rajdhani',sans-serif; font-size: clamp(.35rem,.8vw,.48rem); font-weight:700; letter-spacing:.05em; text-transform:uppercase; color: var(--lc, rgba(255,255,255,.7)); }
+    /* Lettre Xbox */
+    .d-btn::before {
+      content: attr(data-letter); position: absolute; top:3px; right:5px;
+      font-family:'Orbitron',monospace; font-size:.44rem; font-weight:700;
+      color: var(--lc, rgba(255,255,255,.6)); opacity:.75;
+    }
+    /* Highlight */
+    .d-btn::after {
+      content: ''; position: absolute; top:8%; left:16%; width:40%; height:32%;
+      border-radius:50%; background: radial-gradient(circle,rgba(255,255,255,.45),transparent);
+      pointer-events:none;
+    }
+
+    .action-disp {
+      font-family:'Orbitron',monospace; font-weight:700;
+      font-size: clamp(.55rem,1.3vw,.72rem); letter-spacing:.14em;
+      color: var(--xb); min-width:90px; text-align:center; height:1.2em;
+    }
+
+    /* ========================================================= CENTRE */
+    .center { display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .sys-btns { display:flex; gap:7px; }
+    .sys-btn {
+      padding: 5px 11px;
+      background: var(--body); border-radius:20px; border:none;
+      box-shadow: var(--neu-btn);
+      font-family:'Rajdhani',sans-serif; font-size:.48rem; letter-spacing:.18em;
+      color: var(--text-dim); text-transform:uppercase; cursor:pointer; transition:box-shadow .1s;
+    }
+    .sys-btn:active { box-shadow: var(--neu-press); }
+    .center-ver { font-family:'Orbitron',monospace; font-weight:500; font-size:clamp(.48rem,1.2vw,.66rem); letter-spacing:.22em; color:var(--text-dim); }
+    .guide-btn {
+      width:clamp(36px,6vw,46px); height:clamp(36px,6vw,46px); border-radius:50%;
+      background: radial-gradient(circle at 38% 32%, #286228, #0d400d);
+      box-shadow: 5px 5px 12px var(--sd), -3px -3px 9px var(--sl),
+                  0 0 0 2px rgba(16,124,16,.25), inset 0 1px 0 rgba(255,255,255,.25);
+      display:flex; align-items:center; justify-content:center;
+      border:none; cursor:pointer; transition:box-shadow .12s;
+    }
+    .guide-btn:active { box-shadow: 2px 2px 5px var(--sd), inset 3px 3px 8px rgba(0,0,0,.25), 0 0 18px rgba(16,124,16,.5); }
+    .guide-btn svg { width:17px; height:17px; fill:rgba(255,255,255,.85); }
+    .touchpad {
+      width:clamp(50px,9vw,74px); height:clamp(30px,5.5vw,44px);
+      background:var(--body); border-radius:10px;
+      box-shadow:var(--neu-in); border:1px solid rgba(255,255,255,.6); cursor:pointer;
+    }
+
+    /* ========================================================= BARRE STATUT + DEBUG */
+    .status-bar {
+      width:100%; display:flex; align-items:center; justify-content:space-between;
+      padding:7px 18px;
+      background:var(--body); border:1px solid var(--border); border-radius:28px;
+      box-shadow:var(--neu-out);
+      font-size:clamp(.5rem,1.1vw,.63rem); letter-spacing:.14em; text-transform:uppercase; gap:8px;
+    }
+    .si { display:flex; align-items:center; gap:5px; color:var(--text-dim); font-weight:600; flex-shrink:0; }
+    .dot { width:6px; height:6px; border-radius:50%; }
+    .dot.g { background:var(--xg); box-shadow:0 0 5px var(--xg); animation:led-pulse 3s ease-in-out infinite; }
+    .dot.b { background:var(--xx); box-shadow:0 0 5px var(--xx); }
+    .dot.r { background:var(--xb); box-shadow:0 0 5px var(--xb); }
+    #debug {
+      flex:1; text-align:center;
+      font-family:'Orbitron',monospace; font-weight:500;
+      font-size:clamp(.46rem,1vw,.6rem); letter-spacing:.1em; color:var(--text);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .batt-wrap { display:flex; align-items:center; gap:4px; }
+    .batt-bar  { width:24px; height:10px; border:1.5px solid var(--text-dim); border-radius:2px; position:relative; }
+    .batt-bar::before { content:''; position:absolute; inset:1px; width:70%; background:var(--xg); border-radius:1px; }
+    .batt-bar::after  { content:''; position:absolute; right:-4px; top:50%; transform:translateY(-50%); width:3px; height:5px; background:var(--text-dim); border-radius:0 2px 2px 0; }
+
+    /* ========================================================= RIPPLE */
+    @keyframes ripple { from{transform:scale(0);opacity:.4} to{transform:scale(2.5);opacity:0} }
+    .ripple { position:absolute; border-radius:50%; width:50%; padding-bottom:50%; background:rgba(255,255,255,.55); animation:ripple .38s ease-out forwards; pointer-events:none; }
+
+    /* ========================================================= ANIM ENTRÉE */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .wrap > * { animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both; }
+    .wrap > :nth-child(1){animation-delay:.08s}
+    .wrap > :nth-child(2){animation-delay:.18s}
+    .wrap > :nth-child(3){animation-delay:.30s}
+
+    /* ========================================================= RESPONSIVE */
+    @media (max-width:600px),(max-height:500px) {
+      .wrap { gap:5px; }
+      .pad-body { padding:14px 8px 18px; gap:6px; border-radius:28px 28px 46px 46px/18px 18px 36px 36px; }
+      .triggers { top:-10px; padding:0 14px; }
+      .trigger { width:40px; height:10px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="xbox-logo">
+      <svg viewBox="0 0 24 24"><path d="M4.1 6.4C2.8 8 2 10 2 12c0 4.9 3.8 8.9 8.7 9.9C8.4 20.8 5.1 17 4.1 6.4zM12 2C6.5 2 2 6.5 2 12c0-.1 0 0 0 0 .8-1.3 2.4-2.9 4.5-2.6C8.2 4.9 10 3.1 12 2zm0 0c2 1.1 3.8 2.9 5.5 7.4 2.1-.3 3.7 1.3 4.5 2.6C22 6.5 17.5 2 12 2zm7.9 4.4C18.9 4.1 17.3 2.9 15.3 2c-1.3 3.5-5.2 8.5-5.2 8.5s5.5-1.8 9.8-4.1zM8.7 10.5S4.7 5.5 3.4 2C1.4 2.9.4 4.1.4 6.4c4.3 2.3 8.3 4.1 8.3 4.1zm3.3 1.5c-.8 0-4.5 3.4-4.5 3.4s.9 3.7 4.5 6.6c3.6-2.9 4.5-6.6 4.5-6.6S12.8 12 12 12z"/></svg>
+    </div>
+    <span class="logo-text">BOT<em>-</em>CAR</span>
+    <div class="sep"></div>
+    <div class="status-block">
+      <div class="led on" id="statusLed"></div>
+      <span class="status-label">Connecté • <b>192.168.4.1</b></span>
+    </div>
+  </div>
+
+  <!-- CORPS MANETTE -->
+  <div class="pad-body">
+
+    <div class="triggers" aria-hidden="true">
+      <div class="trigger"><span>LT</span></div>
+      <div class="trigger"><span>RT</span></div>
+    </div>
+
+    <!-- GAUCHE — Joystick -->
+    <div class="zone">
+      <span class="zone-lbl">Pilotage</span>
+      <div class="js-wrap" id="jsContainer">
+        <div class="js-base">
+          <div class="js-ring"></div>
+          <div class="js-pad" id="jsPad"></div>
+        </div>
+      </div>
+      <div class="dir-disp" id="dirDisp">——</div>
+    </div>
+
+    <!-- CENTRE -->
+    <div class="center">
+      <div class="sys-btns">
+        <button class="sys-btn">SELECT</button>
+        <button class="sys-btn">START</button>
+      </div>
+      <span class="center-ver">v 1.0</span>
+      <button class="guide-btn" aria-label="Guide">
+        <svg viewBox="0 0 24 24"><path d="M4.1 6.4C2.8 8 2 10 2 12c0 4.9 3.8 8.9 8.7 9.9C8.4 20.8 5.1 17 4.1 6.4zM12 2C6.5 2 2 6.5 2 12c0-.1 0 0 0 0 .8-1.3 2.4-2.9 4.5-2.6C8.2 4.9 10 3.1 12 2zm0 0c2 1.1 3.8 2.9 5.5 7.4 2.1-.3 3.7 1.3 4.5 2.6C22 6.5 17.5 2 12 2zm7.9 4.4C18.9 4.1 17.3 2.9 15.3 2c-1.3 3.5-5.2 8.5-5.2 8.5s5.5-1.8 9.8-4.1zM8.7 10.5S4.7 5.5 3.4 2C1.4 2.9.4 4.1.4 6.4c4.3 2.3 8.3 4.1 8.3 4.1zm3.3 1.5c-.8 0-4.5 3.4-4.5 3.4s.9 3.7 4.5 6.6c3.6-2.9 4.5-6.6 4.5-6.6S12.8 12 12 12z"/></svg>
+      </button>
+      <div class="touchpad" aria-hidden="true"></div>
+    </div>
+
+    <!-- DROITE — Bras & Pince -->
+    <div class="zone">
+      <span class="zone-lbl">Bras / Pince</span>
+      <div class="diamond" id="diamondPad">
+
+        <!-- Y jaune — bras_up -->
+        <button class="d-btn up" data-cmd="bras_up" data-action="MONTER" data-letter="Y" aria-label="Monter le bras">
+          <span class="icon">⬆</span><span class="lbl">Monter</span>
+        </button>
+
+        <!-- A vert — bras_down -->
+        <button class="d-btn down" data-cmd="bras_down" data-action="DESCENDRE" data-letter="A" aria-label="Descendre le bras">
+          <span class="icon">⬇</span><span class="lbl">Descendre</span>
+        </button>
+
+        <!-- X bleu — pince_close -->
+        <button class="d-btn left" data-cmd="pince_close" data-action="SAISIR" data-letter="X" aria-label="Fermer la pince">
+          <span class="icon">✊</span><span class="lbl">Saisir</span>
+        </button>
+
+        <!-- B rouge — pince_open -->
+        <button class="d-btn right" data-cmd="pince_open" data-action="RELÂCHER" data-letter="B" aria-label="Ouvrir la pince">
+          <span class="icon">✋</span><span class="lbl">Relâcher</span>
+        </button>
+      </div>
+      <div class="action-disp" id="actionDisp">——</div>
+    </div>
+
+  </div><!-- .pad-body -->
+
+  <!-- BARRE STATUT + DEBUG -->
+  <div class="status-bar">
+    <div class="si"><div class="dot g"></div><span>WiFi</span></div>
+    <div class="si"><div class="dot b"></div><span>Manuel</span></div>
+    <div id="debug">✨ Prêt</div>
+    <div class="si batt-wrap"><div class="batt-bar"></div><span>70%</span></div>
+    <div class="si"><div class="dot r"></div><span>ESP32</span></div>
+  </div>
+
+</div><!-- .wrap -->
+
+<script>
+/* =========================================================
+   COMMUNICATION — sendCommand (fetch identique à l'ancien fichier)
+========================================================= */
+const debugDiv = document.getElementById('debug');
+
+function log(msg) {
+  debugDiv.textContent = msg;
+  console.log('[BOT-CAR]', msg);
+}
+
+/**
+ * Envoie une commande GET à l'ESP32.
+ * Ex : sendCommand('forward')  →  GET /forward
+ *      sendCommand('stop')     →  GET /stop
+ */
+function sendCommand(cmd) {
+  if (!cmd) return;
+  log(`⟶ ${cmd}`);
+  fetch('/' + cmd, { method: 'GET' })
+    .then(r => {
+      if (r.ok) log(`✅ ${cmd}`);
+      else      log(`❌ HTTP ${r.status} — ${cmd}`);
+    })
+    .catch(err => log(`⚠️ ${err.message}`));
+}
+
+
+/* =========================================================
+   JOYSTICK VIRTUEL
+   Haut  → forward   |  Bas    → backward
+   Gauche→ left      |  Droite → right
+   Centre/Lâcher → stop
+========================================================= */
+(function () {
+  const container   = document.getElementById('jsContainer');
+  const pad         = document.getElementById('jsPad');
+  const dirDisp     = document.getElementById('dirDisp');
+
+  const MAX_R    = 0.38;   // rayon max du pad (38% du conteneur)
+  const DEAD_Z   = 0.20;   // zone morte centrale
+
+  let active = false, activeTId = null;
+  let baseRect = null, cx = 0, cy = 0;
+  let lastCmd = null;
+
+  function updateCenter() {
+    baseRect = container.getBoundingClientRect();
+    cx = baseRect.left + baseRect.width  / 2;
+    cy = baseRect.top  + baseRect.height / 2;
+  }
+
+  function movePad(px, py) {
+    const dx = px - cx, dy = py - cy;
+    const dist = Math.hypot(dx, dy);
+    const maxD = baseRect.width * MAX_R;
+    const clamped = Math.min(dist, maxD);
+    const angle = Math.atan2(dy, dx);
+    const ox = Math.cos(angle) * clamped;
+    const oy = Math.sin(angle) * clamped;
+
+    pad.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`;
+
+    // Zone morte → stop
+    if (dist < maxD * DEAD_Z) { dirDisp.textContent = '●'; dispatch(null); return; }
+
+    // Priorité à l'axe dominant → 4 directions
+    const nx = ox / maxD, ny = oy / maxD;
+    let cmd, lbl;
+    if (Math.abs(ny) >= Math.abs(nx)) {
+      ny < 0 ? (cmd='forward',  lbl='▲ AVANT') : (cmd='backward', lbl='▼ ARRIÈRE');
+    } else {
+      nx < 0 ? (cmd='left', lbl='◀ GAUCHE')    : (cmd='right',    lbl='▶ DROITE');
+    }
+    dirDisp.textContent = lbl;
+    dispatch(cmd);
+  }
+
+  function dispatch(cmd) {
+    if (cmd === lastCmd) return;
+    lastCmd = cmd;
+    sendCommand(cmd ?? 'stop');
+  }
+
+  function snapBack() {
+    pad.style.transition = 'transform .22s cubic-bezier(.22,1,.36,1)';
+    pad.style.transform  = 'translate(-50%,-50%)';
+    setTimeout(() => { pad.style.transition = ''; }, 240);
+    pad.classList.remove('active');
+    dirDisp.textContent = '——';
+    dispatch(null);
+    lastCmd = null;
+  }
+
+  /* Souris */
+  pad.addEventListener('mousedown', e => {
+    e.preventDefault(); active = true;
+    updateCenter(); pad.classList.add('active'); movePad(e.pageX, e.pageY);
+  });
+  window.addEventListener('mousemove', e => { if (active) movePad(e.pageX, e.pageY); });
+  window.addEventListener('mouseup',   () => { if (active) { active = false; snapBack(); } });
+
+  /* Touch — multi-touch natif */
+  container.addEventListener('touchstart', e => {
+    if (activeTId !== null) return;
+    e.preventDefault();
+    const t = e.changedTouches[0];
+    activeTId = t.identifier; active = true;
+    updateCenter(); pad.classList.add('active'); movePad(t.pageX, t.pageY);
+  }, { passive: false });
+
+  window.addEventListener('touchmove', e => {
+    if (!active) return;
+    for (const t of e.changedTouches)
+      if (t.identifier === activeTId) { movePad(t.pageX, t.pageY); break; }
+  }, { passive: false });
+
+  window.addEventListener('touchend', e => {
+    for (const t of e.changedTouches)
+      if (t.identifier === activeTId) { active = false; activeTId = null; snapBack(); break; }
+  });
+  window.addEventListener('touchcancel', () => { active = false; activeTId = null; snapBack(); });
+})();
+
+
+/* =========================================================
+   BOUTONS LOSANGE — Bras & Pince (multi-touch)
+   bras_up | bras_down | pince_close | pince_open
+========================================================= */
+(function () {
+  const actionDisp = document.getElementById('actionDisp');
+  const btns       = document.querySelectorAll('.d-btn');
+  const touchMap   = new Map(); // touchId → btn
+
+  function press(btn) {
+    btn.classList.add('pressed');
+    actionDisp.textContent = btn.dataset.action;
+    // Ripple
+    const r = document.createElement('span');
+    r.className = 'ripple'; r.style.top='25%'; r.style.left='25%';
+    btn.appendChild(r); setTimeout(() => r.remove(), 420);
+    sendCommand(btn.dataset.cmd);
+  }
+
+  function release(btn) {
+    btn.classList.remove('pressed');
+    if (![...btns].some(b => b.classList.contains('pressed')))
+      actionDisp.textContent = '——';
+  }
+
+  /* Souris */
+  btns.forEach(btn => {
+    btn.addEventListener('mousedown',  e => { e.preventDefault(); press(btn); });
+    btn.addEventListener('mouseup',    () => release(btn));
+    btn.addEventListener('mouseleave', () => release(btn));
+  });
+
+  /* Touch multi-doigts */
+  window.addEventListener('touchstart', e => {
+    for (const t of e.changedTouches) {
+      const el = document.elementFromPoint(t.clientX, t.clientY)?.closest('.d-btn');
+      if (el && !touchMap.has(t.identifier)) {
+        touchMap.set(t.identifier, el); press(el);
+      }
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', e => {
+    for (const t of e.changedTouches)
+      if (touchMap.has(t.identifier)) { release(touchMap.get(t.identifier)); touchMap.delete(t.identifier); }
+  });
+  window.addEventListener('touchcancel', e => {
+    for (const t of e.changedTouches)
+      if (touchMap.has(t.identifier)) { release(touchMap.get(t.identifier)); touchMap.delete(t.identifier); }
+  });
+})();
+
+
+/* =========================================================
+   RACCOURCIS CLAVIER — tests desktop
+   ↑↓←→ = joystick   W A S D = boutons bras/pince
+========================================================= */
+(function () {
+  const MOVES = {
+    ArrowUp:   { cmd:'forward',  lbl:'▲ AVANT'    },
+    ArrowDown: { cmd:'backward', lbl:'▼ ARRIÈRE'  },
+    ArrowLeft: { cmd:'left',     lbl:'◀ GAUCHE'   },
+    ArrowRight:{ cmd:'right',    lbl:'▶ DROITE'   },
+  };
+  const BMAP = { KeyW:'up', KeyS:'down', KeyA:'left', KeyD:'right' };
+  const held = new Set();
+
+  document.addEventListener('keydown', e => {
+    if (held.has(e.code)) return; held.add(e.code);
+    if (MOVES[e.code]) {
+      const { cmd, lbl } = MOVES[e.code];
+      const pad = document.getElementById('jsPad');
+      const rect = document.getElementById('jsContainer').getBoundingClientRect();
+      const mx = rect.width * .38;
+      const ox = (e.code==='ArrowLeft'?-1:e.code==='ArrowRight'?1:0)*mx;
+      const oy = (e.code==='ArrowUp'  ?-1:e.code==='ArrowDown' ?1:0)*mx;
+      pad.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`;
+      pad.classList.add('active');
+      document.getElementById('dirDisp').textContent = lbl;
+      sendCommand(cmd);
+    }
+    if (BMAP[e.code]) {
+      const btn = document.querySelector(`.d-btn.${BMAP[e.code]}`);
+      if (btn) { btn.classList.add('pressed'); sendCommand(btn.dataset.cmd); }
+    }
+  });
+
+  document.addEventListener('keyup', e => {
+    held.delete(e.code);
+    if (MOVES[e.code]) {
+      const pad = document.getElementById('jsPad');
+      pad.style.transition = 'transform .22s cubic-bezier(.22,1,.36,1)';
+      pad.style.transform  = 'translate(-50%,-50%)';
+      setTimeout(() => { pad.style.transition=''; }, 240);
+      pad.classList.remove('active');
+      document.getElementById('dirDisp').textContent = '——';
+      sendCommand('stop');
+    }
+    if (BMAP[e.code]) {
+      const btn = document.querySelector(`.d-btn.${BMAP[e.code]}`);
+      if (btn) btn.classList.remove('pressed');
+      if (![...document.querySelectorAll('.d-btn')].some(b=>b.classList.contains('pressed')))
+        document.getElementById('actionDisp').textContent = '——';
+    }
+  });
+})();
+</script>
+</body>
+</html>
