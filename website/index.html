@@ -46,6 +46,7 @@
             --border: #e2e8f0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
         body { 
             font-family: 'Inter', sans-serif; 
             line-height: 1.6; 
@@ -55,6 +56,16 @@
             -webkit-font-smoothing: antialiased;
         }
         
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal { opacity: 0; }
+        .reveal.active { animation: fadeInUp 0.8s ease forwards; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
         
         /* Typography */
@@ -73,19 +84,39 @@
             background-color: var(--bg-white);
             padding: 6rem 0;
             border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Effet visuel de fond léger */
+        header::before {
+            content: ''; position: absolute; top: -50%; left: -10%;
+            width: 500px; height: 500px; background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+            opacity: 0.6; z-index: 0; pointer-events: none;
         }
         .hero-wrap {
             display: flex;
             align-items: center;
             gap: 4rem;
+            position: relative; z-index: 1;
         }
         .hero-text { flex: 1; }
-        .hero-image { flex: 1; text-align: right; }
+        .hero-image { flex: 1; text-align: right; position: relative; }
+        
+        /* Glow effect on hero image */
+        .hero-image::after {
+            content: ''; position: absolute; top: 5%; left: 5%; right: 5%; bottom: 5%;
+            background: var(--primary); filter: blur(40px); opacity: 0.15; z-index: -1;
+            transition: opacity 0.5s ease;
+        }
+        .hero-image:hover::after { opacity: 0.3; }
+        
         .hero-image img { 
             max-width: 100%; 
             border-radius: 12px; 
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transition: transform 0.5s ease;
         }
+        .hero-image:hover img { transform: translateY(-5px); }
         .tag {
             display: inline-block;
             background: var(--primary-light);
@@ -250,7 +281,7 @@
 
     <header>
         <div class="container hero-wrap">
-            <div class="hero-text">
+            <div class="hero-text reveal">
                 <span class="tag">Robotique Éducative & Utilitaire</span>
                 <h1>Projet BOT CAR</h1>
                 <p style="font-size: 1.125rem; color: var(--text-dark); font-weight: 500;">
@@ -260,7 +291,7 @@
                     Piloté via une interface web locale hébergée sur ESP32, il intègre un système de détection d'obstacles et fonctionne en toute autonomie sur un réseau local.
                 </p>
             </div>
-            <div class="hero-image">
+            <div class="hero-image reveal delay-1">
                 <!-- Photo principale du BOT CAR -->
                 <img src="assets/BOT%20CAR.jpg" alt="Photo du robot BOT CAR">
             </div>
@@ -294,7 +325,7 @@
             <p style="text-align: center; max-width: 700px; margin: 0 auto 4rem auto;">Le système repose sur un ESP32 jouant le rôle de contrôleur principal, générant un point d’accès Wi-Fi pour la connexion directe de l'utilisateur.</p>
             
             <div class="grid-4">
-                <div class="card">
+                <div class="card reveal">
                     <div class="icon">
                         <!-- CPU SVG Icon -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
@@ -302,7 +333,7 @@
                     <h3>Microcontrôleur ESP32</h3>
                     <p>Le cerveau du système programmé en MicroPython. Gère les moteurs, capteurs, le Wi-Fi, et le serveur web en temps réel.</p>
                 </div>
-                <div class="card">
+                <div class="card reveal delay-1">
                     <div class="icon">
                         <!-- Robot/Target SVG Icon -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
@@ -310,7 +341,7 @@
                     <h3>Bras Robotique</h3>
                     <p>Trois articulations gérées par servomoteurs : rotation dans l'espace, montée/descente, et ouverture/fermeture de la pince.</p>
                 </div>
-                <div class="card">
+                <div class="card reveal delay-2">
                     <div class="icon">
                         <!-- Radar/Wifi SVG Icon -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
@@ -318,7 +349,7 @@
                     <h3>Capteur Ultrason</h3>
                     <p>Le module HC-SR04 assure la détection d'obstacles pour naviguer en sécurité lors de l'activation du mode autonome.</p>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <div class="icon">
                         <!-- Battery SVG Icon -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"></rect><line x1="23" y1="13" x2="23" y2="11"></line></svg>
@@ -402,5 +433,30 @@
         </div>
     </footer>
 
+    <script>
+        // Détection du scroll pour déclencher les animations CSS
+        document.addEventListener('DOMContentLoaded', function() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            // Animation immédiate pour le header
+            setTimeout(() => {
+                document.querySelectorAll('header .reveal').forEach(el => {
+                    el.classList.add('active');
+                });
+            }, 100);
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            reveals.forEach(reveal => {
+                observer.observe(reveal);
+            });
+        });
+    </script>
 </body>
 </html>
