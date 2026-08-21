@@ -1,51 +1,101 @@
-# BOT CAR
+<div align="center">
+  <img src="BOT%20CAR.jpg" alt="BOT CAR Hero Image" width="100%" style="border-radius: 10px;">
+  <br/>
+  <h1>🚀 BOT CAR</h1>
+  <p>
+    <strong>Robot mobile autonome et manipulateur basé sur ESP32</strong>
+  </p>
+  <p>
+    <a href="https://github.com/Max-Adis/BOT-CAR/"><img src="https://img.shields.io/badge/Language-MicroPython-0078D4.svg?style=flat-square" alt="Language"></a>
+    <a href="https://github.com/Max-Adis/BOT-CAR/"><img src="https://img.shields.io/badge/Platform-ESP32-E83524.svg?style=flat-square" alt="Platform"></a>
+    <a href="https://github.com/Max-Adis/BOT-CAR/"><img src="https://img.shields.io/badge/Status-Active-success.svg?style=flat-square" alt="Status"></a>
+  </p>
+</div>
 
-**BOT CAR** est un robot mobile intelligent équipé d'un bras robotique à trois articulations, conçu pour la collecte, le transport et la gestion d'objets ou de déchets. Piloté via une interface web fluide et un microcontrôleur ESP32, il intègre un système de détection d'obstacles et fonctionne de manière autonome ou manuelle en réseau local sans nécessiter de connexion Internet.
+<br/>
 
-![Photo du BOT CAR](BOT%20CAR.jpg)
+## 📖 À propos du Projet
 
-## Fichiers et Ressources du Projet
+**BOT CAR** est une solution robotisée conçue pour la collecte, le transport et la gestion d'objets ou de petits déchets dans divers environnements (salles de classe, laboratoires, maisons). Ce projet open-source démontre comment associer un châssis mobile, un bras robotique à 3 degrés de liberté et une interface de contrôle sans fil embarquée.
 
-- **Code source principal (ESP32) :** [`main.py`](main.py)
-- **Interface Web de contrôle :** [`index.html.html`](index.html.html)
-- **Ressources de montage :** [Dossier `ZYC0208`](ZYC0208/) *(Ce dossier contient les ressources et éléments pour l'assemblage mécanique du châssis et du bras)*
-- **Documentation détaillée :** [`DOCUMENTATION TECHNIQUE BOT CAR_104017.pdf`](DOCUMENTATION%20TECHNIQUE%20BOT%20CAR_104017.pdf)
-
-## Problématique & Objectifs
-Dans certains environnements (salles de classe, maisons, entreprises), la gestion des déchets ou le déplacement de petits objets peut être contraignant. **BOT CAR** propose une solution robotisée offrant une manipulation mobile pilotée à distance, supprimant ainsi les déplacements physiques de l'utilisateur.
-
-**Objectifs principaux :**
-- Concevoir un robot mobile autonome ou contrôlable à distance.
-- Permettre la manipulation d’objets via un bras robotique.
-- Offrir une interface de contrôle simple, inspirée du design des manettes, via une page web.
-- Fonctionner de manière autonome sur réseau local (ESP32 en mode Point d'Accès).
-
-## Architecture et Matériel Utilisé
-Le système repose sur un ESP32 générant un point d’accès Wi-Fi (IP: `192.168.4.1`).
-
-**Composants :**
-- Carte microcontrôleur ESP32 & Module d’extension
-- Moteurs DC 5V pour le déplacement des 4 roues
-- Servomoteurs pour le bras robotique (3 degrés de liberté : rotation, montée/descente, ouverture/fermeture pince)
-- Capteur ultrason (HC-SR04) pour la détection d’obstacles
-- Batteries Lithium pour une alimentation robuste (remplaçant le système à piles initial)
-- Châssis 4 roues et pièces mécaniques d’assemblage
-
-## Programmation & Interface
-- **Langage :** MicroPython (développé sous Thonny)
-- **Fonctionnalités du code :** Contrôle des moteurs DC, gestion des servos (avec fonction anti-vibration qui coupe le signal PWM à l'arrêt), capteur à ultrason, point d'accès Wi-Fi et serveur HTTP non-bloquant.
-- **Interface Web :** Un frontend élégant "Neumorphisme" inspiré des manettes de jeu, avec joystick virtuel et boutons d'action (A, B, X, Y), supportant le multi-touch sur mobile et les raccourcis clavier sur PC.
-
-## Utilisation
-1. Mettre sous tension le robot.
-2. Se connecter au réseau Wi-Fi de l'ESP32 :
-   - **Nom du réseau :** `BOT-CAR`
-   - **Mot de passe :** `MotDePasseSolide`
-3. Ouvrir un navigateur et accéder à `http://192.168.4.1`.
-4. Contrôler le robot en temps réel !
-
-## Perspectives
-L'intégration de batteries lithium a résolu les défis d'alimentation initiaux liés à la charge du bras et des moteurs. À l'avenir, le projet ambitionne d'équiper le robot d'une **caméra embarquée** pour le pilotage hors de vue et d'une **Intelligence Artificielle de détection d'objets** pour rendre le ramassage totalement autonome.
+L'objectif principal est de supprimer les déplacements physiques de l'utilisateur grâce à une téléopération fluide ou via un mode de navigation autonome basé sur la détection d'obstacles.
 
 ---
-**Réalisé par Maxadis** | [Dépôt GitHub BOT-CAR](https://github.com/Max-Adis/BOT-CAR/)
+
+## ✨ Fonctionnalités Principales
+
+- 🕹️ **Contrôle Intuitif :** Interface web responsive au design moderne, hébergée localement sur l'ESP32.
+- 🦾 **Bras Articulé :** Manipulation d'objets légère avec un bras robotique (rotation, élévation, pince).
+- 🧠 **Mode Autonome :** Navigation autonome avec esquive d'obstacles via un capteur à ultrasons.
+- 📡 **Réseau Indépendant :** L'ESP32 agit comme un Point d'Accès (Access Point) Wi-Fi. Aucune connexion Internet externe n'est requise.
+- 🔋 **Alimentation Fiable :** Système propulsé par des batteries Lithium garantissant un courant de décharge suffisant pour les 4 moteurs et les servomoteurs.
+
+---
+
+## 🛠️ Architecture Matérielle
+
+Le système s'articule autour des composants matériels suivants :
+
+* **Cerveau :** Microcontrôleur ESP32 + Module d'extension.
+* **Propulsion :** Châssis 4 roues motrices équipées de moteurs DC 5V.
+* **Manipulation :** Servomoteurs contrôlant le bras (fonction anti-vibration intégrée au code).
+* **Détection :** Capteur ultrason `HC-SR04` (portée de sécurité réglée à 20 cm).
+* **Énergie :** 2x Batteries Lithium haute capacité.
+
+---
+
+## 💻 Interface Web
+
+L'interface de contrôle a été conçue pour être aussi ergonomique qu'une manette de jeu classique. Elle intègre un joystick de déplacement virtuel et des boutons d'actions contextuels.
+
+<div align="center">
+  <img src="Interface%20wev.png" alt="Interface de contrôle Web" width="80%" style="border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+</div>
+
+---
+
+## 🚀 Guide d'Utilisation (Démarrage Rapide)
+
+Suivez ces étapes pour prendre le contrôle du robot :
+
+1. **Mise sous tension :** Allumez le robot via son interrupteur physique.
+2. **Connexion Wi-Fi :** 
+   - Depuis un smartphone ou un ordinateur, recherchez le réseau sans fil.
+   - **SSID :** `BOT-CAR`
+   - **Mot de passe :** `MotDePasseSolide`
+3. **Accès au panneau de contrôle :**
+   - Ouvrez votre navigateur web favori.
+   - Rendez-vous à l'adresse IP locale : `http://192.168.4.1`
+4. **Pilotage :** Vous êtes connecté au serveur HTTP non-bloquant de l'ESP32. Pilotez le robot en temps réel !
+
+---
+
+## 📁 Arborescence du Dépôt
+
+```text
+📦 BOT-CAR
+ ┣ 📂 ZYC0208/         # Ressources de montage mécanique et tutoriels
+ ┣ 📂 index/           # Code source du site vitrine de présentation
+ ┣ 📜 main.py          # Script principal MicroPython exécuté sur l'ESP32
+ ┣ 📜 index.html.html  # Code HTML/CSS/JS de l'interface de contrôle embarquée
+ ┣ 📜 DOCUMENTATION TECHNIQUE BOT CAR_104017.pdf  # Manuel technique détaillé
+ ┣ 🖼️ BOT CAR.jpg      # Image du robot
+ ┗ 🖼️ Interface wev.png# Capture de l'interface de contrôle
+```
+
+---
+
+## 🔮 Roadmap et Perspectives
+
+Le projet est en évolution continue. Voici les prochaines étapes de développement envisagées :
+
+- [ ] **Vision Embarquée :** Intégration d'une caméra pour permettre un pilotage "hors de vue" (FPV).
+- [ ] **Intelligence Artificielle :** Déploiement d'un modèle de détection d'objets (Computer Vision) pour rendre la collecte des déchets 100% autonome.
+- [ ] **Télémétrie Avancée :** Retour d'information sur la tension de la batterie en temps réel sur l'interface Web.
+
+---
+
+<div align="center">
+  <b>Développé et Maintenu par <a href="https://github.com/Max-Adis">Maxadis</a></b><br>
+  <i>Projet de robotique éducative et utilitaire - Avril 2026</i>
+</div>
