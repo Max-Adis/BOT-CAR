@@ -110,13 +110,18 @@
         }
         .hero-image:hover::after { opacity: 0.3; }
         
+        @keyframes floatImage {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
         .hero-image img { 
             max-width: 100%; 
             border-radius: 12px; 
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            transition: transform 0.5s ease;
+            animation: floatImage 4s ease-in-out infinite;
         }
-        .hero-image:hover img { transform: translateY(-5px); }
+        
         .tag {
             display: inline-block;
             background: var(--primary-light);
@@ -156,13 +161,14 @@
             padding: 2rem;
             border-radius: 12px;
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: box-shadow 0.3s ease, transform 0.1s ease-out; /* Plus rapide pour le suivi JS */
             height: 100%;
+            transform-style: preserve-3d;
         }
         .card:hover {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            /* Transform géré par JavaScript pour le dandinement */
         }
         
         /* Icons */
@@ -455,6 +461,31 @@
             
             reveals.forEach(reveal => {
                 observer.observe(reveal);
+            });
+
+            // Effet 3D Dandinement (Tilt) sur les cartes
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    let rect = card.getBoundingClientRect();
+                    let x = e.clientX - rect.left;
+                    let y = e.clientY - rect.top;
+                    // Calcule le pourcentage de position de la souris (-0.5 à +0.5)
+                    let xPct = (x / rect.width) - 0.5;
+                    let yPct = (y / rect.height) - 0.5;
+                    // Applique la rotation 3D (dandinement)
+                    card.style.transform = `perspective(1000px) rotateX(${yPct * -15}deg) rotateY(${xPct * 15}deg) scale(1.02)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    // Pour éviter une transition saccadée au retour
+                    card.style.transition = 'box-shadow 0.3s ease, transform 0.5s ease';
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'box-shadow 0.3s ease, transform 0.1s ease-out';
+                    }, 500);
+                });
             });
         });
     </script>
